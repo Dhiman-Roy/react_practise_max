@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Map from "../../shared/components/UIElements/Map";
 import Card from "../../shared/components/UIElements/Card";
 import Button from "../../shared/components/FormElements/Button";
 import Modal from "../../shared/components/UIElements/Modal";
@@ -7,6 +8,8 @@ export default function PlaceItem(props) {
   const [showMap, setShowMap] = useState(false);
   const openMapHandler = () => setShowMap(true);
   const closeMapHandler = () => setShowMap(false);
+  const mapCenter = [props.coordinates.lng, props.coordinates.lat];
+
   return (
     <>
       <Modal
@@ -18,7 +21,7 @@ export default function PlaceItem(props) {
         footer={<Button onClick={closeMapHandler}>CLOSE</Button>}
       >
         <div className="map-container">
-          <h2>The map</h2>
+          <Map center={mapCenter} zoom={1} />
         </div>
       </Modal>
       <li className="place-item">
