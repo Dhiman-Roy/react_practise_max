@@ -3,17 +3,19 @@ import { useCallback, useReducer } from "react";
 
 const formReducer = (state, action) => {
   let formIsValid = true;
-
+  console.log(state);
   switch (action.type) {
     case "INPUT-CHANGE":
       for (const inputId in state.inputs) {
+        if (!state.inputs[inputId]) {
+          continue;
+        }
         if (inputId === action.inputId) {
           formIsValid = formIsValid && action.isValid;
         } else {
           formIsValid = formIsValid && state.inputs[inputId].isValid;
         }
       }
-      console.log(formIsValid);
 
       return {
         ...state,
@@ -22,6 +24,11 @@ const formReducer = (state, action) => {
           [action.inputId]: { value: action.value, isValid: action.isValid },
         },
         isValid: formIsValid,
+      };
+    case "SET_DATA":
+      return {
+        inputs: action.inputs,
+        isValid: action.formIsValid,
       };
 
     default:
@@ -43,5 +50,14 @@ export function useForm(initialInputs, initialFormValidity) {
       inputId: id,
     });
   }, []);
-  return [formState, inputHandler];
+
+  const setFormData = useCallback((inputData, formValidity) => {
+    dispatch({
+      type: "SET_DATA",
+      inputs: inputData,
+      formIsValid: formValidity,
+    });
+  }, []);
+
+  return [formState, inputHandler, setFormData];
 }
