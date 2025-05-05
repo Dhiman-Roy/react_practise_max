@@ -3,7 +3,7 @@ import { useCallback, useReducer } from "react";
 
 const formReducer = (state, action) => {
   let formIsValid = true;
-  console.log(state);
+
   switch (action.type) {
     case "INPUT-CHANGE":
       for (const inputId in state.inputs) {
