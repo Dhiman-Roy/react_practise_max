@@ -4,7 +4,7 @@ import Input from "../../shared/components/FormElements/Input";
 import Button from "../../shared/components/FormElements/Button";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
-import useHttpClient from "../../shared/hooks/http-hook";
+import { useHttpClient } from "../../shared/hooks/http-hook";
 import { useForm } from "../../shared/hooks/form-hook";
 import { AuthContext } from "../../shared/context/auth-context";
 import {
@@ -59,7 +59,7 @@ export default function Auth() {
 
     if (isLoginMode) {
       try {
-        await sendRequest(
+        const responseData = await sendRequest(
           "http://localhost:5000/api/users/login",
           "POST",
           JSON.stringify({
@@ -71,13 +71,13 @@ export default function Auth() {
           }
         );
 
-        auth.login();
+        auth.login(responseData.user.id);
       } catch (err) {
         console.log(err.message);
       }
     } else {
       try {
-        await sendRequest(
+        const responseData = await sendRequest(
           "http://localhost:5000/api/users/signup",
           "POST",
           JSON.stringify({
@@ -90,7 +90,7 @@ export default function Auth() {
           }
         );
 
-        auth.login();
+        auth.login(responseData.user.id);
       } catch (err) {
         console.log(err.message);
       }
