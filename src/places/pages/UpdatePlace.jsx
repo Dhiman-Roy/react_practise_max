@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import {
   useHistory,
   useParams,
@@ -9,11 +9,13 @@ import Card from "../../shared/components/UIElements/Card";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import "./PlaceForm.css";
+import { AuthContext } from "../../shared/context/auth-context";
 import {
   VALIDATOR_REQUIRE,
   VALIDATOR_MINLENGTH,
 } from "../../shared/util/validators";
 import { useForm } from "../../shared/hooks/form-hook";
+import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 // const DUMMY_PLACES = [
 //   {
 //     id: "p1",
@@ -57,6 +59,7 @@ import { useForm } from "../../shared/hooks/form-hook";
 // ];
 export default function UpdatePlace() {
   const [loadedPlaces, setLoadedPlaces] = useState();
+  const auth = useContext(AuthContext);
   const history = useHistory();
   const placeId = useParams().placeId;
   const { isLoading, sendRequest, error, clearError } = useHttpClient();
@@ -76,9 +79,9 @@ export default function UpdatePlace() {
   );
 
   useEffect(() => {
-    try {
-      console.log(placeId);
-      const fetchData = async () => {
+    console.log(placeId);
+    const fetchData = async () => {
+      try {
         const responseData = await sendRequest(
           `http://localhost:5000/api/places/${placeId}`
         );
@@ -99,16 +102,17 @@ export default function UpdatePlace() {
           },
           true
         );
-      };
+      } catch (err) {}
+    };
 
-      fetchData();
-    } catch (err) {}
-  }, [sendRequest, placeId]);
+    fetchData();
+  }, []);
 
   const placeUpdateSubmitHandler = async (event) => {
     event.preventDefault();
     console.log(placeId);
     try {
+      console.log("data sent");
       await sendRequest(
         `http://localhost:5000/api/places/${placeId}`,
         "PATCH",
@@ -120,7 +124,7 @@ export default function UpdatePlace() {
       );
     } catch (err) {}
 
-    history.push("/" + placeId + "/places");
+    history.push("/" + auth.userId + "/places");
   };
 
   if (!loadedPlaces) {
@@ -143,6 +147,7 @@ export default function UpdatePlace() {
   console.log(formState.inputs);
   return (
     <>
+      <ErrorModal error={error} onClear={clearError} />
       {!isLoading && loadedPlaces && (
         <form className="place-form" onSubmit={placeUpdateSubmitHandler}>
           <Input
