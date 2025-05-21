@@ -3,12 +3,14 @@ import Map from "../../shared/components/UIElements/Map";
 import Card from "../../shared/components/UIElements/Card";
 import Button from "../../shared/components/FormElements/Button";
 import Modal from "../../shared/components/UIElements/Modal";
+import { useHttpClient } from "../../shared/hooks/http-hook";
 import { AuthContext } from "../../shared/context/auth-context";
 import "./PlaceItem.css";
 export default function PlaceItem(props) {
   const auth = useContext(AuthContext);
   const [showMap, setShowMap] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const { isLoading, sendRequest, clearError, error } = useHttpClient();
   const openMapHandler = () => setShowMap(true);
   const closeMapHandler = () => setShowMap(false);
 
@@ -19,8 +21,19 @@ export default function PlaceItem(props) {
     setShowConfirmModal(false);
   };
 
-  const confirmDeleteHandler = () => {
+  const confirmDeleteHandler = async () => {
     setShowConfirmModal(false);
+    try {
+      console.log(props.id);
+      await sendRequest(
+        `http://localhost:5000/api/places/${props.id}`,
+        "DELETE"
+      );
+      props.placeDeleteHandler(props.id);
+    } catch (err) {
+      console.log(err.message);
+    }
+
     console.log("deleting..");
   };
 

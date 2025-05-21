@@ -14,11 +14,15 @@ export default function PlaceList(props) {
       </div>
     );
   }
+  const placeDeleteHandler = (placeId) => {
+    props.placeDeleteHandler(placeId);
+  };
 
   return (
     <ul className="place-list">
       {props.items.places.map((place) => (
         <PlaceItem
+          placeDeleteHandler={placeDeleteHandler}
           key={place.id}
           id={place.id}
           image={place.image}
