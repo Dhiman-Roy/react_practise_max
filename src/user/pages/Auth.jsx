@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import Card from "../../shared/components/UIElements/Card";
 import Input from "../../shared/components/FormElements/Input";
 import Button from "../../shared/components/FormElements/Button";
+import ImageUpload from "../../shared/components/FormElements/imageUpload";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import { useHttpClient } from "../../shared/hooks/http-hook";
@@ -36,7 +37,7 @@ export default function Auth() {
   const switchModeHandler = () => {
     if (!isLoginMode) {
       setFormData(
-        { ...formState.inputs, name: undefined },
+        { ...formState.inputs, name: undefined, image: undefined },
         formState.inputs.email.isValid && formState.inputs.password.isValid
       );
     } else {
@@ -45,6 +46,10 @@ export default function Auth() {
           ...formState.inputs,
           name: {
             value: "",
+            isValid: false,
+          },
+          image: {
+            value: null,
             isValid: false,
           },
         },
@@ -56,6 +61,7 @@ export default function Auth() {
 
   const authSubmitHandler = async (event) => {
     event.preventDefault();
+    console.log(formState.inputs);
 
     if (isLoginMode) {
       try {
@@ -115,6 +121,9 @@ export default function Auth() {
               errorText="Please enter a name."
               onInput={inputHandler}
             ></Input>
+          )}
+          {!isLoginMode && (
+            <ImageUpload center onInput={inputHandler} id="image" />
           )}
           <Input
             id="email"
