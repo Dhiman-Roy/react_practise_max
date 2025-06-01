@@ -7,6 +7,7 @@ import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import { useForm } from "../../shared/hooks/form-hook";
 import { AuthContext } from "../../shared/context/auth-context";
+import ImageUpload from "../../shared/components/FormElements/imageUpload";
 import {
   VALIDATOR_REQUIRE,
   VALIDATOR_MINLENGTH,
@@ -42,21 +43,19 @@ export default function NewPlace() {
   const placeSubmitHandler = async (event) => {
     event.preventDefault();
     try {
-      await sendRequest(
-        "http://localhost:5000/api/places",
-        "POST",
-        JSON.stringify({
-          title: formState.inputs.title.value,
-          description: formState.inputs.description.value,
-          address: formState.inputs.address.value,
-          coordinates: { lat: 23.25, lng: 24.36 },
-          imageURL:
-            "https://images.unsplash.com/photo-1501675423372-9bfa95849e62?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bGFrZSUyMGJhaWthbCUyMHJ1c3NpYXxlbnwwfHwwfHx8MA%3D%3D",
-          creator: auth.userId,
-        }),
-        { "Content-Type": "application/json" }
-      );
+      const coordinate = { lat: 23.25, lng: 24.36 };
+      const formData = new FormData();
+      formData.append("title", formState.inputs.title.value);
+      formData.append("description", formState.inputs.description.value);
+      formData.append("address", formState.inputs.address.value);
+      formData.append("coordinates", JSON.stringify(coordinate));
+      formData.append("image", formState.inputs.image.value);
+      formData.append("creator", auth.userId);
+      await sendRequest("http://localhost:5000/api/places", "POST", formData);
       //ridirect user to a different page
+      for (let [key, value] of formData.entries()) {
+        console.log(`${key}: ${value}`);
+      }
       history.push("/");
     } catch (err) {}
   };
@@ -82,6 +81,7 @@ export default function NewPlace() {
           errorText="Please enter a valid description (at least 5 characters)."
           onInput={inputHandler}
         />
+        <ImageUpload center onInput={inputHandler} id="image" />
         <Input
           id="address"
           element="input"
