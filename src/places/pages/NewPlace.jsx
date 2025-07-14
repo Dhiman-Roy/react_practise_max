@@ -51,11 +51,11 @@ export default function NewPlace() {
       formData.append("coordinates", JSON.stringify(coordinate));
       formData.append("image", formState.inputs.image.value);
       formData.append("creator", auth.userId);
-      await sendRequest("http://localhost:5000/api/places", "POST", formData);
+      await sendRequest("http://localhost:5000/api/places", "POST", formData, {
+        Authorization: "Bearer " + auth.token,
+      });
       //ridirect user to a different page
-      for (let [key, value] of formData.entries()) {
-        console.log(`${key}: ${value}`);
-      }
+
       history.push("/");
     } catch (err) {}
   };

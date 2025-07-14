@@ -76,7 +76,7 @@ export default function Auth() {
           }
         );
 
-        auth.login(responseData.user.id);
+        auth.login(responseData.userId, responseData.token);
       } catch (err) {
         console.log(err.message);
       }
@@ -93,8 +93,8 @@ export default function Auth() {
           "POST",
           formData
         );
-
-        auth.login(responseData.user.id);
+        console.log(responseData);
+        auth.login(responseData.userId, responseData.token);
       } catch (err) {
         console.log(err.message);
       }

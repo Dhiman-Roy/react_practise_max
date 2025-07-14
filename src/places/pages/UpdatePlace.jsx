@@ -79,7 +79,6 @@ export default function UpdatePlace() {
   );
 
   useEffect(() => {
-    console.log(placeId);
     const fetchData = async () => {
       try {
         const responseData = await sendRequest(
@@ -120,7 +119,10 @@ export default function UpdatePlace() {
           title: formState.inputs.title.value,
           description: formState.inputs.description.value,
         }),
-        { "Content-Type": "application/json" }
+        {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + auth.token,
+        }
       );
     } catch (err) {}
 
