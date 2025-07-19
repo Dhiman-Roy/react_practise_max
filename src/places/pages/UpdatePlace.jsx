@@ -82,7 +82,7 @@ export default function UpdatePlace() {
     const fetchData = async () => {
       try {
         const responseData = await sendRequest(
-          `http://localhost:5000/api/places/${placeId}`
+          `${import.meta.env.VITE_API_URL}/places/${placeId}`
         );
         setLoadedPlaces(responseData.place);
         console.log(responseData);
@@ -113,7 +113,7 @@ export default function UpdatePlace() {
     try {
       console.log("data sent");
       await sendRequest(
-        `http://localhost:5000/api/places/${placeId}`,
+        `${import.meta.env.VITE_API_URL}/places/${placeId}`,
         "PATCH",
         JSON.stringify({
           title: formState.inputs.title.value,

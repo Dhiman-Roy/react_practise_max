@@ -51,9 +51,14 @@ export default function NewPlace() {
       formData.append("coordinates", JSON.stringify(coordinate));
       formData.append("image", formState.inputs.image.value);
       formData.append("creator", auth.userId);
-      await sendRequest("http://localhost:5000/api/places", "POST", formData, {
-        Authorization: "Bearer " + auth.token,
-      });
+      await sendRequest(
+        `${import.meta.env.VITE_API_URL}/places`,
+        "POST",
+        formData,
+        {
+          Authorization: "Bearer " + auth.token,
+        }
+      );
       //ridirect user to a different page
 
       history.push("/");

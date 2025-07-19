@@ -10,7 +10,7 @@ export default function Users() {
     const fetchUsers = async () => {
       try {
         const responseData = await sendRequest(
-          "http://localhost:5000/api/users"
+          `${import.meta.env.VITE_API_URL}/users`
         );
 
         setLoadedUsers(responseData.users);

@@ -25,7 +25,7 @@ export default function PlaceItem(props) {
     setShowConfirmModal(false);
     try {
       await sendRequest(
-        `http://localhost:5000/api/places/${props.id}`,
+        `${import.meta.env.VITE_API_URL}/places/${props.id}`,
         "DELETE",
         null,
         { Authorization: "Bearer " + auth.token }
@@ -79,7 +79,7 @@ export default function PlaceItem(props) {
         <Card className="place-item__content">
           <div className="place-item__image">
             <img
-              src={`http://localhost:5000/${props.image}`}
+              src={`${import.meta.env.VITE_URL}/${props.image}`}
               alt={props.title}
             />
           </div>
